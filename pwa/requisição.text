@@ -1,0 +1,26 @@
+# Write your query or mutation here
+query {
+  snowdogMenus {
+    items {
+      menu_id
+      identifier
+      nodes {
+        items {
+          url_key
+          type
+          parent_id
+          level
+          node_id
+        }
+      }
+    }
+  }
+}
+
+# query {
+#   categories {
+#     items {
+#      name 
+#     }
+#   }
+# }

@@ -1,5 +1,5 @@
 {
-  "name": "pwa-magento",
+  "name": "pwa",
   "private": true,
   "version": "0.0.1",
   "description": "A new project based on @magento/venia-concept",
@@ -28,12 +28,12 @@
     "@magento/venia-drivers": "src/drivers"
   },
   "dependencies": {
-    "@magento/pwa-buildpack": "~11.4.3"
+    "@magento/pwa-buildpack": "~11.4.3",
+    "@siqueira/snowdog-menu-pwa": "link:packages/@siqueira/snowdog-menu-pwa"
   },
   "devDependencies": {
     "@adobe/apollo-link-mutation-queue": "~1.0.2",
     "@apollo/client": "~3.5.0",
-    "@babel/core": "~7.15.0",
     "@babel/plugin-proposal-class-properties": "~7.14.5",
     "@babel/plugin-proposal-object-rest-spread": "~7.14.7",
     "@babel/plugin-proposal-optional-chaining": "~7.16.0",
@@ -41,7 +41,6 @@
     "@babel/plugin-syntax-jsx": "~7.2.0",
     "@babel/plugin-transform-react-jsx": "~7.14.9",
     "@babel/plugin-transform-runtime": "~7.4.4",
-    "@babel/preset-env": "~7.16.0",
     "@babel/runtime": "~7.15.3",
     "@magento/babel-preset-peregrine": "~1.2.3",
     "@magento/eslint-config": "~1.5.0",

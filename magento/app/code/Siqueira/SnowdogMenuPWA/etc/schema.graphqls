@@ -1,0 +1,28 @@
+type SnowdogMenu @doc(description: "SnowdogMenu defines all menu information") {
+    menu_id: Int! @doc(description: "Menu ID")
+    identifier: String! @doc(description: "Menu identifier")
+    title: String! @doc(description: "Menu title")
+    css_class: String @doc(description: "Menu CSS class")
+    creation_time: String! @doc(description: "Menu creation time")
+    update_time: String! @doc(description: "Menu update time")
+    nodes: SnowdogMenuNodes @doc(description: "Menu nodes") @resolver(class: "Snowdog\\Menu\\Model\\GraphQl\\Resolver\\Menu\\Field\\Nodes")
+    children: [SnowdogMenuNodeInterface!] @doc(description: "Child nodes")
+}
+
+interface SnowdogMenuNodeInterface @typeResolver(class: "Snowdog\\Menu\\Model\\GraphQl\\Resolver\\Node\\InterfaceTypeResolver") @doc(description: "SnowdogMenuNodeInterface contains the fields that are common to all types of nodes") {
+    node_id: Int! @doc(description: "Node ID")
+    menu_id: Int! @doc(description: "Menu ID")
+    type: String! @doc(description: "Node type")
+    classes: String @doc(description: "Node classes")
+    parent_id: Int @doc(description: "Node parent ID")
+    position: Int! @doc(description: "Node position")
+    level: Int! @doc(description: "Node level")
+    title: String @doc(description: "Node title")
+    node_template: String @doc(description: "Node template")
+    submenu_template: String @doc(description: "Node submenu template")
+    creation_time: String! @doc(description: "Node creation time")
+    update_time: String! @doc(description: "Node update time")
+    url_key: String @doc(description: "Returns the url key when available")
+    additional_data: [String!] @doc(description: "Node additional data")
+    children: [SnowdogMenuNodeInterface!] @doc(description: "Child nodes")
+}
