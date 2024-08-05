@@ -36,7 +36,8 @@ export const GET_STORE_CONFIG_DATA = gql`
         # eslint-disable-next-line @graphql-eslint/require-id-when-available
         storeConfig {
             store_code
-            category_url_suffix
+            category_url_suffix,
+          	product_url_suffix
         }
     }
 `;

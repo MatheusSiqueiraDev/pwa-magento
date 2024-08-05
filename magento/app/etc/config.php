@@ -390,6 +390,7 @@ return [
         'PayPal_BraintreeGiftWrapping' => 1,
         'PayPal_BraintreeGraphQl' => 1,
         'Snowdog_Menu' => 1,
-        'Siqueira_SnowdogMenuPWA' => 1
+        'Siqueira_SnowdogMenuPWA' => 1,
+        'RedChamps_SnowDogMenuLumaSupport' => 1
     ]
 ];

@@ -1,41 +1,47 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
-import resourceUrl from '@magento/peregrine/lib/util/makeUrl';
-
 import { useStyle } from '@magento/venia-ui/lib/classify';
 import defaultClasses from '@magento/venia-ui/lib/components/MegaMenu/submenuColumn.module.css';
 import PropTypes from 'prop-types';
+import getUrlNode from '../../util/getUrlNode';
 
 /**
- * The SubmenuColumn component displays columns with categories in submenu
+ * The SubmenuColumn component displays a column in the submenu with a list of child items.
  *
- * @param {MegaMenuCategory} props.category
- * @param {function} props.onNavigate - function called when clicking on Link
+ * @param {Object} props - The component properties.
+ * @returns {JSX.Element} - The SubmenuColumn component.
  */
 const SubmenuColumn = props => {
     const {
-        category,
+        node,
         categoryUrlSuffix,
+        productUrlSuffix,
         onNavigate,
         handleCloseSubMenu
     } = props;
+
     const classes = useStyle(defaultClasses, props.classes);
 
-    const categoryUrl = category => category.type == 'category' 
-        ? `/${category.url_key}${categoryUrlSuffix || ''}`
-        : category.url_key
-    
+    const { nodeUrl } = getUrlNode({
+        node,
+        categoryUrlSuffix,
+        productUrlSuffix
+    });
 
     let children = null;
 
-    if (category.children.length) {
-        const childrenItems = category.children.map((subCategory, index) => {
-            const { isActive, title } = subCategory;
+    if (node.children.length) {
+        const childrenItems = node.children.map((subNode, index) => {
+            const { isActive, title } = subNode;
 
-            // setting keyboardProps if it is last child of that category
+            const { nodeUrl } = getUrlNode({
+                node: subNode,
+                categoryUrlSuffix,
+                productUrlSuffix
+            });
+
             const keyboardProps =
-                index === category.children.length - 1
+                index === node.children.length - 1
                     ? props.keyboardProps
                     : {};
 
@@ -45,7 +51,7 @@ const SubmenuColumn = props => {
                         {...keyboardProps}
                         className={isActive ? classes.linkActive : classes.link}
                         data-cy="MegaMenu-SubmenuColumn-link"
-                        to={categoryUrl(subCategory)}
+                        to={nodeUrl}
                         onClick={onNavigate}
                     >
                         {title}
@@ -57,8 +63,7 @@ const SubmenuColumn = props => {
         children = <ul className={classes.submenuChild}>{childrenItems}</ul>;
     }
 
-    // setting keyboardProps if category does not have any sub-category
-    const keyboardProps = category.children.length ? {} : props.keyboardProps;
+    const keyboardProps = node.children.length ? {} : props.keyboardProps;
 
     return (
         <div className={classes.submenuColumn}>
@@ -66,13 +71,13 @@ const SubmenuColumn = props => {
                 {...keyboardProps}
                 className={classes.link}
                 data-cy="MegaMenu-SubmenuColumn-link"
-                to={categoryUrl(category)}
+                to={nodeUrl}
                 onClick={() => {
                     handleCloseSubMenu();
                     onNavigate();
                 }}
             >
-                <span className={classes.heading}>{category.title}</span>
+                <span className={classes.heading}>{node.title}</span>
             </Link>
             {children}
         </div>
@@ -82,7 +87,7 @@ const SubmenuColumn = props => {
 export default SubmenuColumn;
 
 SubmenuColumn.propTypes = {
-    category: PropTypes.shape({
+    node: PropTypes.shape({
         children: PropTypes.array,
         node_id: PropTypes.number.isRequired,
         isActive: PropTypes.bool.isRequired,
@@ -90,6 +95,8 @@ SubmenuColumn.propTypes = {
         url_key: PropTypes.string.isRequired
     }).isRequired,
     categoryUrlSuffix: PropTypes.string,
+    productUrlSuffix: PropTypes.string,
     onNavigate: PropTypes.func.isRequired,
-    handleCloseSubMenu: PropTypes.func.isRequired
+    handleCloseSubMenu: PropTypes.func.isRequired,
+    keyboardProps: PropTypes.object
 };

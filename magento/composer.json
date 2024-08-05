@@ -43,6 +43,7 @@
         "magento/pwa": "^0.7.2",
         "magento/sample-data-media": "100.4.*",
         "markshust/magento2-module-disabletwofactorauth": "^2.0",
+        "redchamps/module-snowdog-menu-luma-support": "^1.0",
         "snowdog/module-menu": "^2.26"
     },
     "autoload": {

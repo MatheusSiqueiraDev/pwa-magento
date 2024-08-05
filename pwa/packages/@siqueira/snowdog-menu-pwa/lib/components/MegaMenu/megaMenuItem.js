@@ -1,50 +1,45 @@
 import React, { useMemo } from 'react';
 import { ChevronDown as ArrowDown } from 'react-feather';
 import { Link } from 'react-router-dom';
-import PropTypes, { func } from 'prop-types';
-
-import resourceUrl from '@magento/peregrine/lib/util/makeUrl';
-import { useMegaMenuItem } from '../talons/MegaMenu/useMegaMenuItem';
-
+import PropTypes from 'prop-types';
+import { useMegaMenuItem } from '../../talons/MegaMenu/useMegaMenuItem';
 import { useStyle } from '@magento/venia-ui/lib/classify';
 import defaultClasses from '@magento/venia-ui/lib/components/MegaMenu/megaMenuItem.module.css';
 import Submenu from './submenu';
 import Icon from '@magento/venia-ui/lib/components/Icon';
+import getUrlNode from '../../util/getUrlNode';
 
 /**
- * The MegaMenuItem component displays mega menu item
+ * The MegaMenuItem component displays a single menu item in the mega menu.
  *
- * @param {MegaMenuCategory} props.category
- * @param {number} props.activeCategoryId - uid of active category
- * @param {int} props.mainNavWidth - width of the main nav. It's used for setting min-width of the submenu
- * @param {function} props.onNavigate - function called when clicking on Link
+ * @param {Object} props - The component properties.
+ * @returns {JSX.Element} - The MegaMenuItem component.
  */
 const MegaMenuItem = props => {
     const {
-        activeCategoryId,
-        category,
+        activeNodeId,
+        node,
         mainNavWidth,
         categoryUrlSuffix,
         subMenuState,
         disableFocus,
         onNavigate,
         handleSubMenuFocus,
-        handleClickOutside
+        handleClickOutside,
+        productUrlSuffix
     } = props;
 
+    const { nodeUrl } = getUrlNode({
+        node,
+        categoryUrlSuffix,
+        productUrlSuffix
+    });
+
     const classes = useStyle(defaultClasses, props.classes);
-    
-    const categoryUrl = () => {
-        if(category.type == 'category') 
-            return resourceUrl(
-                `/${category.url_key}${categoryUrlSuffix || ''}`
-            );
-        return category.url_key;
-    }
 
     const talonProps = useMegaMenuItem({
-        category,
-        activeCategoryId,
+        node,
+        activeNodeId,
         subMenuState,
         disableFocus
     });
@@ -62,36 +57,43 @@ const MegaMenuItem = props => {
         ? classes.megaMenuItem_active
         : classes.megaMenuItem;
 
+    /**
+     * Maps the node's children to Submenu components.
+     *
+     * @returns {JSX.Element|null} - The submenu items or null if there are no children.
+     */
     const items = useMemo(() => {
-        return category.children.length ? (
+        return node.children.length ? (
             <Submenu
                 isFocused={isFocused}
                 subMenuState={subMenuState}
-                items={category.children}
+                items={node.children}
                 mainNavWidth={mainNavWidth}
                 handleCloseSubMenu={handleCloseSubMenu}
                 categoryUrlSuffix={categoryUrlSuffix}
+                productUrlSuffix={productUrlSuffix}
                 onNavigate={onNavigate}
             />
         ) : null;
     }, [
-        category,
+        node,
         isFocused,
         mainNavWidth,
         subMenuState,
         handleCloseSubMenu,
         categoryUrlSuffix,
+        productUrlSuffix,
         onNavigate
     ]);
 
-    const maybeDownArrowIcon = category.children.length ? (
+    const maybeDownArrowIcon = node.children.length ? (
         <Icon className={classes.arrowDown} src={ArrowDown} size={16} />
     ) : null;
 
-    const linkAttributes = category.children.length
+    const linkAttributes = node.children.length
         ? {
-              'aria-label': `Category: ${category.title}. ${
-                  category.children.length
+              'aria-label': `Category: ${node.title}. ${
+                  node.children.length
               } sub-categories`
           }
         : {};
@@ -124,10 +126,10 @@ const MegaMenuItem = props => {
                     isActive ? classes.megaMenuLinkActive : classes.megaMenuLink
                 }
                 data-cy="MegaMenu-MegaMenuItem-link"
-                to={categoryUrl}
+                to={nodeUrl}
                 onClick={onNavigate}
             >
-                {category.title}
+                {node.title}
                 {maybeDownArrowIcon}
             </Link>
             {items}
@@ -138,7 +140,7 @@ const MegaMenuItem = props => {
 export default MegaMenuItem;
 
 MegaMenuItem.propTypes = {
-    category: PropTypes.shape({
+    node: PropTypes.shape({
         items: PropTypes.array,
         node_id: PropTypes.number.isRequired,
         include_in_menu: PropTypes.number,
@@ -147,9 +149,10 @@ MegaMenuItem.propTypes = {
         path: PropTypes.array.isRequired,
         url_key: PropTypes.string.isRequired
     }).isRequired,
-    activeCategoryId: PropTypes.number,
+    activeNodeId: PropTypes.number,
     mainNavWidth: PropTypes.number.isRequired,
     categoryUrlSuffix: PropTypes.string,
+    productUrlSuffix: PropTypes.string,
     onNavigate: PropTypes.func.isRequired,
     handleSubMenuFocus: PropTypes.func.isRequired,
     handleClickOutside: PropTypes.func.isRequired

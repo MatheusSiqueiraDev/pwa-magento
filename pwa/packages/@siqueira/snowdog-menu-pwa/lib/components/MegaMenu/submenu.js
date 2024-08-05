@@ -2,17 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useSubMenu } from '@magento/peregrine/lib/talons/MegaMenu/useSubMenu';
-
 import { useStyle } from '@magento/venia-ui/lib/classify';
 import defaultClasses from '@magento/venia-ui/lib/components/MegaMenu/submenu.module.css';
 import SubmenuColumn from './submenuColumn';
 
 /**
- * The Submenu component displays submenu in mega menu
+ * The Submenu component displays a submenu within the mega menu.
  *
- * @param {array} props.items - categories to display
- * @param {int} props.mainNavWidth - width of the main nav. It's used for setting min-width of the submenu
- * @param {function} props.onNavigate - function called when clicking on Link
+ * @param {Object} props - The component properties.
+ * @returns {JSX.Element} - The Submenu component.
  */
 const Submenu = props => {
     const {
@@ -22,8 +20,10 @@ const Submenu = props => {
         subMenuState,
         handleCloseSubMenu,
         categoryUrlSuffix,
+        productUrlSuffix,
         onNavigate
     } = props;
+
     const PADDING_OFFSET = 20;
     const classes = useStyle(defaultClasses, props.classes);
 
@@ -39,16 +39,22 @@ const Submenu = props => {
         ? classes.submenu_active
         : classes.submenu_inactive;
 
-    const subMenus = items.map((category, index) => {
+    /**
+     * Maps the items to SubmenuColumn components.
+     *
+     * @returns {JSX.Element[]} - The submenu columns.
+     */
+    const subMenus = items.map((node, index) => {
         const keyboardProps =
             index === items.length - 1 ? talonProps.keyboardProps : {};
         return (
             <SubmenuColumn
                 index={index}
                 keyboardProps={keyboardProps}
-                key={category.node_id}
-                category={category}
+                key={node.node_id}
+                node={node}
                 categoryUrlSuffix={categoryUrlSuffix}
+                productUrlSuffix={productUrlSuffix}
                 onNavigate={onNavigate}
                 handleCloseSubMenu={handleCloseSubMenu}
             />
@@ -82,6 +88,7 @@ Submenu.propTypes = {
     ).isRequired,
     mainNavWidth: PropTypes.number.isRequired,
     categoryUrlSuffix: PropTypes.string,
+    productUrlSuffix: PropTypes.string,
     onNavigate: PropTypes.func.isRequired,
     handleCloseSubMenu: PropTypes.func.isRequired
 };

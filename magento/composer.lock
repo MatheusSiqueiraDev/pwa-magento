@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "525179d0a3001db1c6a8f381f9dee367",
+    "content-hash": "1c25bc2428d45ced4b70d19af472fe29",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -23285,6 +23285,44 @@
                 }
             ],
             "time": "2023-11-16T16:16:50+00:00"
+        },
+        {
+            "name": "redchamps/module-snowdog-menu-luma-support",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/redchamps/snowdog-menu-luma-support.git",
+                "reference": "b857bf31145e6876620a63f4ba8cc19d54096ef0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/redchamps/snowdog-menu-luma-support/zipball/b857bf31145e6876620a63f4ba8cc19d54096ef0",
+                "reference": "b857bf31145e6876620a63f4ba8cc19d54096ef0",
+                "shasum": ""
+            },
+            "require": {
+                "snowdog/module-menu": "*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "RedChamps\\SnowDogMenuLumaSupport\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "description": "This extension will make snowdog/module-menu compatible with luma theme",
+            "support": {
+                "issues": "https://github.com/redchamps/snowdog-menu-luma-support/issues",
+                "source": "https://github.com/redchamps/snowdog-menu-luma-support/tree/1.0.2"
+            },
+            "abandoned": true,
+            "time": "2020-06-09T09:24:22+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",

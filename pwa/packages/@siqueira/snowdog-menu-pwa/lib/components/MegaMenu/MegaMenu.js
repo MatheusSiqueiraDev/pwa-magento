@@ -5,11 +5,15 @@ import { useMegaMenu } from '@magento/peregrine/lib/talons/MegaMenu/useMegaMenu'
 import { useStyle } from '@magento/venia-ui/lib/classify';
 
 import defaultClasses from '@magento/venia-ui/lib/components/MegaMenu/megaMenu.module.css';
-import { useSnowdogMenu } from '../talons/SnowdogMenu/useSnowdogMenu';
+import { useSnowdogMenu } from '../../talons/SnowdogMenu/useSnowdogMenu';
+import operationSnowdogMenu from '../../talons/SnowdogMenu/snowdogMenu.gql';
 import MegaMenuItem from './megaMenuItem';
 
 /**
- * The MegaMenu component displays menu with categories on desktop devices
+ * The MegaMenu component displays a menu with categories on desktop devices.
+ *
+ * @param {Object} props - The component properties.
+ * @returns {JSX.Element} - The MegaMenu component.
  */
 const MegaMenu = props => {
     const mainNavRef = useRef(null);
@@ -18,14 +22,20 @@ const MegaMenu = props => {
         subMenuState,
         disableFocus,
         handleSubMenuFocus,
-        categoryUrlSuffix,
         handleNavigate,
         handleClickOutside
-    } = useMegaMenu({ mainNavRef });
+    } = useMegaMenu({
+        mainNavRef,
+        operations: {
+            getStoreConfigQuery: operationSnowdogMenu.getStoreConfigQuery
+        }
+    });
 
     const {
         snowdogMenuData,
-        activeCategoryId
+        activeNodeId,
+        categoryUrlSuffix,
+        productUrlSuffix
     } = useSnowdogMenu();
 
     const classes = useStyle(defaultClasses, props.classes);
@@ -35,6 +45,9 @@ const MegaMenu = props => {
         elementRef: mainNavRef
     });
 
+    /**
+     * Handles the resize event to set the navigation width.
+     */
     useEffect(() => {
         const handleResize = () => {
             const navWidth = mainNavRef.current
@@ -51,18 +64,24 @@ const MegaMenu = props => {
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    });
+    }, []);
 
+    /**
+     * Maps the snowdog menu data to MegaMenuItems.
+     *
+     * @returns {JSX.Element[]|null} - The menu items or null if there are no children.
+     */
     const items = snowdogMenuData.children
-        ? snowdogMenuData.children.map(category => {
+        ? snowdogMenuData.children.map(node => {
               return (
                   <MegaMenuItem
-                      category={category}
-                      activeCategoryId={activeCategoryId}
+                      node={node}
+                      activeNodeId={activeNodeId}
                       categoryUrlSuffix={categoryUrlSuffix}
+                      productUrlSuffix={productUrlSuffix}
                       mainNavWidth={mainNavWidth}
                       onNavigate={handleNavigate}
-                      key={category.node_id}
+                      key={node.node_id}
                       subMenuState={subMenuState}
                       disableFocus={disableFocus}
                       handleSubMenuFocus={handleSubMenuFocus}
@@ -71,6 +90,7 @@ const MegaMenu = props => {
               );
           })
         : null;
+
     return (
         <nav
             ref={mainNavRef}
